@@ -1,16 +1,13 @@
-import { useState } from 'react'
-
 import './App.css'
+import FacialExpressionDetection from './FacialExpressionDetection'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-     <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    </>
+    <div className='flex'>
+     <h1 className='text-3xl text-blue-600 text-center'>Facial Expression Detection</h1>
+      <FacialExpressionDetection />
+    </div>
   )
 }
 
