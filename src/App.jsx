@@ -4,8 +4,8 @@ import FacialExpressionDetection from './FacialExpressionDetection'
 function App() {
 
   return (
-    <div className='flex'>
-     <h1 className='text-3xl text-blue-600 text-center'>Facial Expression Detection</h1>
+    <div className='container mx-auto'>
+     <h1 className='text-3xl text-blue-600 text-center font-bold my-5'>Facial Expression Detector</h1>
       <FacialExpressionDetection />
     </div>
   )
