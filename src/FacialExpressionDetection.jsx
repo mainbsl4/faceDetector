@@ -17,12 +17,26 @@ const FacialExpressionDetection = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
       video.srcObject = stream;
 
-      const classifyExpression = async (landmarks) => {
-        // Use pre-trained model for emotion recognition
-        const emotionPredictions = await window.emotionModel.predict(tf.tensor(landmarks));
-        const emotionLabels = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'];
-        const maxIndex = emotionPredictions.indexOf(Math.max(...emotionPredictions));
-        setExpression(emotionLabels[maxIndex]);
+      const classifyExpression = (landmarks) => {
+        // Calculate distances between key points to determine facial expressions
+        const mouthLeft = landmarks[234]; // Index for left corner of mouth
+        const mouthRight = landmarks[454]; // Index for right corner of mouth
+        const mouthWidth = Math.abs(mouthLeft[0] - mouthRight[0]);
+
+        const eyebrowLeft = landmarks[150]; // Index for left eyebrow
+        const eyebrowRight = landmarks[216]; // Index for right eyebrow
+        const eyebrowHeight = Math.abs(eyebrowLeft[1] - eyebrowRight[1]);
+
+        // Determine expression based on distances
+        if (mouthWidth > 60 && eyebrowHeight < 10) {
+          setExpression('Happy');
+        } else if (mouthWidth > 60 && eyebrowHeight >= 10) {
+          setExpression('Surprised');
+        } else if (mouthWidth < 40 && eyebrowHeight >= 10) {
+          setExpression('Angry');
+        } else {
+          setExpression('Neutral');
+        }
       };
 
       const faceDetection = async () => {
@@ -60,9 +74,11 @@ const FacialExpressionDetection = () => {
   }, []);
 
   return (
-    <div>
-      <video ref={videoRef} width="720" height="560" autoPlay muted></video>
+    <div className='flex gap-5'>
+     <div> 
+        <video ref={videoRef} width="720" height="560" autoPlay muted></video>
       <canvas ref={canvasRef} width="720" height="560"></canvas>
+      </div>
       <div>Detected Expression: {expression}</div>
     </div>
   );
